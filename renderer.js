@@ -74,7 +74,8 @@ function addMessage(text, isUser) {
   messageElement.classList.add(isUser ? 'user-message' : 'ai-message');
   
   if (isUser) {
-    messageElement.textContent = text;
+    // Convert newlines to <br> tags to preserve formatting
+    messageElement.innerHTML = text.replace(/\n/g, '<br>');
   } else {
     messageElement.innerHTML = formatMessage(text);
   }
@@ -384,11 +385,31 @@ document.addEventListener('DOMContentLoaded', () => {
   mainContent = document.querySelector('.main-content');
   //testButton = document.getElementById('test-button');
   
+  // Auto-resize textarea based on content
+  function autoResizeTextarea() {
+    // Reset height to auto so we can determine the scroll height
+    messageInput.style.height = 'auto';
+    
+    // Set the height to match the content (the scrollHeight)
+    messageInput.style.height = (messageInput.scrollHeight) + 'px';
+  }
+  
+  // Call the resize function whenever input changes
+  messageInput.addEventListener('input', autoResizeTextarea);
+  
   // Event listeners
   sendButton.addEventListener('click', sendMessage);
   
   messageInput.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
+      // If Shift key is pressed, allow a new line
+      if (event.shiftKey) {
+        return; // Allows the default behavior (inserting a new line)
+      }
+      
+      // Prevent default behavior (which would be a new line in a textarea)
+      event.preventDefault();
+      
       sendMessage();
     }
   });

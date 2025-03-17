@@ -76,7 +76,10 @@ function createSearchWindow() {
       nodeIntegration: true,
       contextIsolation: false
     },
-    show: false
+    show: false,
+    // Allow window to grow with content
+    minHeight: 60,
+    maxHeight: 200
   });
 
   // Load the search.html file
@@ -275,6 +278,15 @@ ipcMain.on('hide-main-window', () => {
   console.log('Hiding main window (Escape pressed)');
   if (mainWindow) {
     mainWindow.hide();
+  }
+});
+
+// Handle resize requests from the search window
+ipcMain.on('resize-search-window', (event, height) => {
+  console.log('Resizing search window to height:', height);
+  if (searchWindow && !searchWindow.isDestroyed()) {
+    const [width] = searchWindow.getSize();
+    searchWindow.setSize(width, Math.min(Math.max(height, 60), 200)); // Constrain height between 60 and 200
   }
 });
 
