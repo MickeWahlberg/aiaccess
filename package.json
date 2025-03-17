@@ -1,0 +1,43 @@
+{
+  "name": "ai-chat-app",
+  "version": "1.0.0",
+  "description": "A lightweight macOS AI chat application with global shortcut",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx electron .",
+    "build": "electron-builder",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ai",
+    "chat",
+    "macos",
+    "electron"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "electron": "^32.3.3"
+  },
+  "devDependencies": {
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.aichat.app",
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": "dmg"
+    },
+    "files": [
+      "*.js",
+      "*.html",
+      "*.png",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "."
+    }
+  }
+} 

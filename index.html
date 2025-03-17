@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>AI Chat App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <div class="main-content">
+      <div class="chat-container" id="chat-container">
+        <!-- Chat messages will be added here dynamically -->
+      </div>
+      
+      <!-- Loading indicator -->
+      <div class="loading-dots" id="loading-dots">
+        Thinking<span class="dots"></span>
+      </div>
+      
+      <div class="shortcut-hint">
+        <!-- Shortcut hint will be dynamically populated based on .env configuration -->
+      </div>
+      
+      <div class="input-container">
+        <input id="message-input" type="text" placeholder="Type a message...">
+        <button id="send-button">Send</button>
+      </div>
+    </div>
+    
+    <!-- Chat history sidebar -->
+    <div class="history-sidebar" id="history-sidebar">
+      <div class="history-header">
+        <h3>Chat History</h3>
+      </div>
+      <div class="history-list" id="history-list">
+        <!-- Chat history items will be added here dynamically -->
+      </div>
+    </div>
+    
+    <!-- Toggle button for the sidebar -->
+    <button id="toggle-history" class="toggle-history-btn">
+      <span class="toggle-icon">≡</span>
+    </button>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html> 
