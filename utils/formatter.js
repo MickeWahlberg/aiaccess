@@ -44,6 +44,19 @@ const md = new MarkdownIt({
   }
 });
 
+// Fix rendering issues with lists
+md.renderer.rules.list_item_open = function (tokens, idx) {
+  return '<li class="markdown-list-item">';
+};
+
+md.renderer.rules.bullet_list_open = function (tokens, idx) {
+  return '<ul class="markdown-list">';
+};
+
+md.renderer.rules.ordered_list_open = function (tokens, idx) {
+  return '<ol class="markdown-list">';
+};
+
 /**
  * Main format function - converts text with markdown and math to HTML
  * @param {string} text - The input text to format
@@ -51,8 +64,11 @@ const md = new MarkdownIt({
  */
 function formatText(text) {
   try {
+    // Pre-process the text to fix common formatting issues with lists
+    let processedText = preprocessListItems(text);
+    
     // Step 1: Pre-process math expressions before markdown rendering
-    const processedText = preprocessMath(text);
+    processedText = preprocessMath(processedText);
     
     // Step 2: Convert markdown to HTML (math expressions are protected)
     let html = md.render(processedText);
@@ -60,7 +76,10 @@ function formatText(text) {
     // Step 3: Post-process to restore and render math expressions
     html = renderMathExpressions(html);
     
-    // Step 4: Add copy buttons to code blocks
+    // Step 4: Format citation references like [1], [2], etc.
+    html = formatCitationReferences(html);
+    
+    // Step 5: Add copy buttons to code blocks
     const htmlWithCopyButtons = addCopyButtonsToCodeBlocks(html);
     
     return htmlWithCopyButtons;
@@ -336,6 +355,39 @@ function escapeHtml(text) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
+}
+
+/**
+ * Format citation references like [1], [2], etc. in the HTML
+ * @param {string} html - HTML with potential citation references
+ * @returns {string} - HTML with formatted citation references
+ */
+function formatCitationReferences(html) {
+  // Regular expression to match citation references [n] that aren't part of URLs or other constructs
+  // Negative lookbehind to avoid matching within URLs or complex constructs
+  return html.replace(/(?<!\])\[(\d+)\](?!\()/g, '<sup class="citation-reference">[$1]</sup>');
+}
+
+/**
+ * Pre-process list items to fix formatting issues
+ * @param {string} text - The text to process
+ * @returns {string} - Processed text with fixed list formatting
+ */
+function preprocessListItems(text) {
+  // Fix bullet points with improper spacing and formatting
+  // This targets lists where the bullet and the bold text might be causing alignment issues
+  
+  // First handle bulleted lists with bold text at the beginning of an item
+  let processed = text.replace(/^(\s*[-*+]\s+)(\*\*[^*]+\*\*)(.*)$/gm, '$1$2$3');
+  
+  // Then handle numbered lists with bold text at the beginning of an item
+  processed = processed.replace(/^(\s*\d+\.\s+)(\*\*[^*]+\*\*)(.*)$/gm, '$1$2$3');
+  
+  // Ensure consistent spacing after list markers
+  processed = processed.replace(/^(\s*[-*+])(\S)/gm, '$1 $2');
+  processed = processed.replace(/^(\s*\d+\.)(\S)/gm, '$1 $2');
+  
+  return processed;
 }
 
 module.exports = {

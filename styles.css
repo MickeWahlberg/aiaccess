@@ -581,11 +581,33 @@ strong {
 .ai-message ul, .ai-message ol {
   margin-top: 2px;
   margin-bottom: 2px;
+  padding-left: 25px; /* Ensure consistent left padding */
 }
 
 .ai-message li {
-  margin-bottom: 0px;
-  line-height: 1.4;
+  margin-bottom: 4px; /* Slightly increase spacing between list items */
+  line-height: 1.6; /* Increase line height for better readability */
+  position: relative; /* Ensure proper positioning context */
+  display: list-item; /* Explicitly set display type */
+}
+
+/* Fix alignment issues with list markers and text, especially with inline formatting */
+.ai-message li p {
+  margin: 0; /* Remove default paragraph margins inside list items */
+  display: inline-block; /* Keep content inline */
+}
+
+/* Handle nested formatting within list items better */
+.ai-message li strong, 
+.ai-message li em,
+.ai-message li .citation-reference {
+  display: inline; /* Ensure inline elements stay inline */
+  vertical-align: baseline; /* Reset vertical alignment */
+}
+
+/* Ensure content inside list items stays properly aligned */
+.ai-message li > * {
+  vertical-align: top; /* Align all direct children to the top */
 }
 
 /* Math expression styles */
@@ -856,4 +878,64 @@ strong {
 
 .math-inline .katex {
   padding: 0 0.1em;
+}
+
+/* Citation references styling */
+.citation-reference {
+  font-size: 0.75em;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+  top: -0.5em;
+  color: #9CDCFE; /* A light blue color to stand out */
+  cursor: default;
+}
+
+.citation-reference:hover {
+  color: #42a5f5; /* Slightly darker when hovered */
+}
+
+/* Markdown list styling to fix alignment issues */
+.markdown-list {
+  padding-left: 25px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  list-style-position: outside;
+}
+
+.markdown-list-item {
+  margin-bottom: 4px;
+  padding-left: 4px;
+  line-height: 1.6;
+  vertical-align: top;
+}
+
+.markdown-list-item > p {
+  display: inline-block;
+  margin: 0;
+  vertical-align: top;
+}
+
+/* Ensure formatting inside list items works correctly */
+.markdown-list-item strong,
+.markdown-list-item em,
+.markdown-list-item code,
+.markdown-list-item .citation-reference {
+  display: inline;
+  vertical-align: baseline;
+}
+
+/* Citation references styling */
+.citation-reference {
+  font-size: 0.75em;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+  top: -0.5em;
+  color: #9CDCFE; /* A light blue color to stand out */
+  cursor: default;
+}
+
+.citation-reference:hover {
+  color: #42a5f5; /* Slightly darker when hovered */
 } 
