@@ -81,8 +81,14 @@ function addMessage(text, isUser) {
   
   chatContainer.appendChild(messageElement);
   
-  // Scroll to the bottom of the chat
-  chatContainer.scrollTop = chatContainer.scrollHeight;
+  // Handle scrolling based on message type
+  if (isUser) {
+    // For user messages, scroll to the bottom as before
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  } else {
+    // For AI messages, scroll to the top of this message
+    messageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
   
   // Save the message to the current conversation if it's not already there
   if (currentConversation) {
@@ -252,9 +258,31 @@ function loadConversation(conversation) {
   chatContainer.innerHTML = '';
   
   // Add each message to the chat
-  conversation.messages.forEach(message => {
-    addMessage(message.text, message.isUser);
+  conversation.messages.forEach((message, index) => {
+    // Temporarily disable scrolling behavior during conversation loading
+    const originalScrollTop = chatContainer.scrollTop;
+    
+    // Add the message
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message');
+    messageElement.classList.add(message.isUser ? 'user-message' : 'ai-message');
+    
+    if (message.isUser) {
+      messageElement.textContent = message.text;
+    } else {
+      messageElement.innerHTML = formatMessage(message.text);
+    }
+    
+    chatContainer.appendChild(messageElement);
+    
+    // Restore original scroll position to prevent automatic scrolling during loading
+    chatContainer.scrollTop = originalScrollTop;
   });
+  
+  // After loading all messages, scroll to the top of the conversation
+  if (chatContainer.firstChild) {
+    chatContainer.scrollTop = 0;
+  }
   
   // Refresh the history list to update the active item
   loadChatHistory();
@@ -274,7 +302,21 @@ function startNewConversation() {
   chatContainer.innerHTML = '';
   
   // Add a welcome message
-  addMessage('Hello! How can I help you today?', false);
+  const welcomeMessage = 'Hello! How can I help you today?';
+  const messageElement = document.createElement('div');
+  messageElement.classList.add('message', 'ai-message');
+  messageElement.innerHTML = formatMessage(welcomeMessage);
+  chatContainer.appendChild(messageElement);
+  
+  // Store the welcome message in the conversation
+  currentConversation.messages.push({
+    text: welcomeMessage,
+    isUser: false,
+    timestamp: new Date().toISOString()
+  });
+  
+  // Scroll to the top of the welcome message
+  messageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
   
   // Refresh the history list
   loadChatHistory();
