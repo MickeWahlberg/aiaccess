@@ -122,9 +122,95 @@ function setConversationMessages(conversationId, messages) {
   conversationContexts.set(conversationId, messages);
 }
 
+/**
+ * Get a test response with various formatting elements
+ * @returns {Promise<Object>} - Response object with formatted test text
+ */
+async function getTestResponse() {
+  const testText = `
+## Testing Markdown Formatting
+
+This is a test of **bold text** and *italic text*.
+
+### Here's a numbered list:
+1. First item
+2. Second item
+3. Third item
+
+### Here's a bullet list:
+- Item one
+- Item two
+- Item three
+
+### Code Examples
+
+\`\`\`python
+def calculate_pi(n_terms):
+    """
+    Calculate π using the Leibniz formula:
+    π/4 = 1 - 1/3 + 1/5 - 1/7 + ...
+    """
+    result = 0
+    for i in range(n_terms):
+        term = 1 / (2 * i + 1)
+        result += term if i % 2 == 0 else -term
+    return 4 * result
+
+# Calculate π to 1000 terms
+pi_approx = calculate_pi(1000)
+print(f"π ≈ {pi_approx}")
+\`\`\`
+
+\`\`\`java
+public class PiCalculator {
+    public static void main(String[] args) {
+        int nTerms = 1000;
+        double pi = calculatePi(nTerms);
+        System.out.printf("π ≈ %.10f%n", pi);
+    }
+    
+    public static double calculatePi(int nTerms) {
+        double result = 0;
+        for (int i = 0; i < nTerms; i++) {
+            double term = 1.0 / (2 * i + 1);
+            result += (i % 2 == 0) ? term : -term;
+        }
+        return 4 * result;
+    }
+}
+\`\`\`
+
+### Math Expressions
+
+Here's the formula for calculating π using the Leibniz series:
+
+$\\frac{\\pi}{4} = 1 - \\frac{1}{3} + \\frac{1}{5} - \\frac{1}{7} + \\cdots = \\sum_{n=0}^{\\infty} \\frac{(-1)^n}{2n+1}$
+
+And here's a more complex example:
+
+$$E = mc^2$$
+
+And a unit conversion example:
+
+$1\\,\\text{kg} \\times 1000 = 1000\\,\\text{kg} = 1\\,\\text{tonne}$
+
+That's all for testing!
+`;
+
+  return { 
+    text: testText,
+    conversationId: 'test-formatting',
+    messages: [
+      { role: 'user', content: 'Test formatting' },
+      { role: 'assistant', content: testText }
+    ]
+  };
+}
+
 // Export the API functions
 module.exports = {
   callAI,
   getConversationMessages,
-  setConversationMessages
+  setConversationMessages,
+  getTestResponse
 }; 

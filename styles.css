@@ -5,8 +5,8 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #1e1e1e;
-  color: #e0e0e0;
+  background-color: #1e1e1e; /* VSCode/Cursor dark background */
+  color: #d4d4d4; /* VSCode/Cursor text color */
 }
 
 /* App container for layout with sidebar */
@@ -205,8 +205,8 @@ body {
 }
 
 .user-message {
-  background-color: #444;
-  color: white;
+  background-color: #264f78; /* VSCode blue-ish background for user messages */
+  color: #ffffff;
 }
 
 .user-message::after {
@@ -219,8 +219,8 @@ body {
 }
 
 .ai-message {
-  background-color: #2d2d2d;
-  color: #e0e0e0;
+  background-color: #2d2d2d; /* Keep as is */
+  color: #d4d4d4; /* VSCode/Cursor text color */
   white-space: pre-wrap;
   border: 1px solid #3a3a3a;
 }
@@ -322,27 +322,35 @@ body {
   border-top: 1px solid #333;
 }
 
-/* Code block styling */
+/* Code block styling - VSCode/Cursor-like */
 .code-block-wrapper {
   position: relative;
   margin: 12px 0;
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden; /* Ensure no overflow from pre elements */
 }
 
 pre {
-  background-color: #2a2a2a;
+  background-color: #1e1e1e; /* Match VSCode/Cursor editor background */
   border-radius: 6px;
   padding: 12px;
+  padding-top: 16px; /* Extra padding at top for copy button */
   overflow-x: auto;
   position: relative;
   margin: 0;
-  border: 1px solid #444;
+  border: 1px solid #3d3d3d; /* Slightly lighter border */
+}
+
+.hljs {
+  background-color: transparent !important; /* Ensure highlight.js doesn't override our background */
 }
 
 code {
   font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
   font-size: 14px;
   tab-size: 2;
-  color: #e0e0e0;
+  color: #d4d4d4; /* VSCode/Cursor code text color */
 }
 
 /* CSS-based syntax highlighting */
@@ -489,24 +497,35 @@ code {
   /* These classes are no longer used, but we'll keep them for backward compatibility */
 }
 
+/* Copy button styling - VSCode/Cursor-like */
 .copy-button {
   position: absolute;
-  top: 6px;
-  right: 6px;
-  background-color: #555;
-  color: white;
+  top: 5px;
+  right: 5px;
+  background-color: #3d3d3d; /* VSCode/Cursor button background */
+  color: #d4d4d4;
   border: none;
   border-radius: 4px;
   padding: 4px 8px;
   font-size: 12px;
   cursor: pointer;
-  opacity: 0.8;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
   z-index: 10;
 }
 
 .copy-button:hover {
   opacity: 1;
-  background-color: #666;
+  background-color: #505050; /* VSCode/Cursor hover color */
+}
+
+.copy-button:active {
+  background-color: #606060;
+}
+
+.copy-button.copied {
+  background-color: #37373d; /* VSCode/Cursor notification color */
+  color: #89d185; /* VSCode/Cursor success green */
 }
 
 h1, h2, h3 {
@@ -571,8 +590,9 @@ strong {
   text-align: center;
   font-family: 'Times New Roman', Times, serif;
   font-size: 1.1em;
-  background-color: #2a2a2a;
-  border-radius: 4px;
+  background-color: #1e1e1e; /* Match code blocks */
+  border: 1px solid #3d3d3d; /* Match code blocks */
+  border-radius: 6px;
   overflow-x: auto;
   line-height: 1.5;
 }
@@ -636,6 +656,7 @@ strong {
   font-style: normal;
   margin-left: 0.15em;
   font-weight: normal;
+  color: #9CDCFE; /* VSCode light blue for variables/units */
 }
 
 /* Operators in math mode */
@@ -678,4 +699,155 @@ strong {
   font-size: 0.75em;
   bottom: -0.25em;
   margin: 0 0.05em;
+}
+
+/* Test button */
+.test-button {
+  background-color: #6b7280;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 8px;
+  font-size: 0.9em;
+}
+
+.test-button:hover {
+  background-color: #4b5563;
+}
+
+/* Math styles */
+.math-block {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+  padding: 12px;
+  background-color: #1e1e1e; /* Match code blocks background */
+  border: 1px solid #3d3d3d;
+  border-radius: 6px;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 1.1em;
+  overflow-x: auto;
+}
+
+.math-inline {
+  font-family: 'Times New Roman', Times, serif;
+  font-style: italic;
+  padding: 0 3px;
+}
+
+/* KaTeX styling updates for VSCode look */
+.katex {
+  font-size: 1.1em;
+  line-height: 1.2;
+  text-rendering: auto;
+}
+
+.katex-display {
+  margin: 0.5em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.2em 0;
+}
+
+/* Override KaTeX colors for VSCode dark theme compatibility */
+.katex .mord, 
+.katex .mbin,
+.katex .mrel,
+.katex .mopen,
+.katex .mclose,
+.katex .mpunct {
+  color: #d4d4d4; /* VSCode/Cursor text color */
+}
+
+/* Math symbols and letters */
+.katex .mord.mathnormal {
+  color: #9cdcfe; /* VSCode/Cursor variable color - light blue */
+}
+
+/* Math operators */
+.katex .mbin {
+  color: #d7ba7d; /* VSCode/Cursor operator color */
+}
+
+/* Numbers in math */
+.katex .mord.mathnormal.mn,
+.katex .mord > .mn {
+  color: #b5cea8; /* VSCode/Cursor number color - light green */
+}
+
+/* Integral, summation, product symbols */
+.katex .mop {
+  color: #c586c0; /* VSCode/Cursor keyword color - purple */
+}
+
+/* Special symbols like infinity */
+.katex .mord.mathord {
+  color: #569cd6; /* VSCode/Cursor symbol color - blue */
+}
+
+/* Make units blue like variables in VSCode */
+.katex .textrm {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: #9cdcfe; /* VSCode/Cursor variable color - light blue */
+}
+
+/* Fraction styling */
+.katex .mfrac .frac-line {
+  border-bottom-color: #d4d4d4;
+}
+
+.katex .mfrac .frac-line {
+  min-height: 1px;
+}
+
+/* Improve fraction appearance for dark theme */
+.katex .mfrac {
+  margin: 0 0.2em;
+}
+
+.katex .mspace {
+  display: inline-block;
+}
+
+.katex .mfrac .mfrac {
+  vertical-align: 0.3em;
+}
+
+/* Add a VS Code style to specific math elements */
+.katex .textit {
+  color: #569CD6; /* Blue for emphasized text */
+}
+
+.katex .textsf {
+  color: #ce9178; /* Orange for Sans Serif text like "VS Code" */
+}
+
+.katex .texttt {
+  font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+  color: #CE9178; /* Orange-brown for monospaced text */
+}
+
+/* Summation, product, etc limits */
+.katex .mop .op-symbol.small-op {
+  margin-top: 0.2em;
+}
+
+.katex .mop .op-limits > .vlist-t {
+  border: none; /* Remove border for cleaner look */
+}
+
+.katex .msubsup {
+  margin-right: 0.1em;
+}
+
+/* Update the math inline and block containers */
+.math-block .katex-display {
+  margin: 0.5em 0;
+  padding: 0.5em 0; 
+}
+
+.math-inline .katex {
+  padding: 0 0.1em;
 } 

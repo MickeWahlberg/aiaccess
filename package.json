@@ -18,7 +18,10 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.4.7",
-    "electron": "^32.3.3"
+    "electron": "^32.3.3",
+    "highlight.js": "^11.11.1",
+    "katex": "^0.16.21",
+    "markdown-it": "^14.1.0"
   },
   "devDependencies": {
     "electron-builder": "^25.1.8"
@@ -40,4 +43,4 @@
       "buildResources": "."
     }
   }
-} 
+}
