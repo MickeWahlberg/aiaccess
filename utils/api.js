@@ -161,7 +161,7 @@ class ApiService {
   }
 
   // Send query to AI API
-  async sendAiQuery(query) {
+  async sendAiQuery(query, webSearch = false) {
     try {
       // Check if we need to authenticate
       const token = this.authManager.getBearerToken();
@@ -180,6 +180,11 @@ class ApiService {
         messages: [{ role: 'user', content: query }],
         max_tokens: 1000
       };
+
+      // Add web search parameter if enabled
+      if (webSearch) {
+        requestData.web_search = true;
+      }
       
       // Send request to AI API using our fetch wrapper
       const response = await this.fetchWithElectron(API_CONFIG.API_URL, {

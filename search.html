@@ -89,6 +89,31 @@
             background: var(--input-bg);
             border-radius: 4px;
         }
+
+        /* Web search toggle styles */
+        .web-search-toggle {
+            display: flex;
+            align-items: center;
+            color: var(--text-dim);
+            font-size: 13px;
+            padding: 4px 8px;
+            margin-right: 8px;
+            cursor: pointer;
+            background: var(--input-bg);
+            border-radius: 4px;
+            user-select: none;
+        }
+
+        .web-search-toggle.active {
+            color: var(--text);
+            background: rgba(70, 130, 180, 0.2);
+        }
+
+        .web-search-toggle svg {
+            width: 14px;
+            height: 14px;
+            margin-right: 4px;
+        }
     </style>
 </head>
 <body>
@@ -100,6 +125,14 @@
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
                 <input type="text" class="search-input" placeholder="Search..." autofocus>
+                <div class="web-search-toggle" id="web-search-toggle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path>
+                        <path d="M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z"></path>
+                    </svg>
+                    Web
+                </div>
                 <div class="shortcut-hint">⌘K</div>
             </div>
         </div>

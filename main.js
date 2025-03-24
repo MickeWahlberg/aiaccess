@@ -198,18 +198,28 @@ function hideWindow(window) {
 
 // Navigate to conversation with ID
 function navigateToConversation(conversationId) {
-  if (!mainWindow || mainWindow.isDestroyed()) {
-    mainWindow = createMainWindow();
-  }
+  return new Promise((resolve, reject) => {
+    if (!mainWindow || mainWindow.isDestroyed()) {
+      mainWindow = createMainWindow();
+    }
 
-  const conversationUrl = `${config.UI_URL}/conversation?id=${conversationId}`;
-  console.log('Navigating to conversation:', conversationUrl);
-  
-  mainWindow.loadURL(conversationUrl).catch(error => {
-    console.error('Failed to load conversation URL:', error);
+    const conversationUrl = `${config.UI_URL}/conversation?id=${conversationId}`;
+    console.log('Navigating to conversation:', conversationUrl);
+    
+    // Make sure the window is visible first
+    setWindowToCurrentSpace(mainWindow);
+    
+    // Navigate to URL and resolve when done
+    mainWindow.loadURL(conversationUrl)
+      .then(() => {
+        console.log('Navigation complete');
+        resolve();
+      })
+      .catch(error => {
+        console.error('Failed to load conversation URL:', error);
+        reject(error);
+      });
   });
-
-  setWindowToCurrentSpace(mainWindow);
 }
 
 // Show initial loader before API call
@@ -260,14 +270,22 @@ function hideLoadingState() {
 }
 
 // Handle search query
-ipcMain.on('search-query', async (event, query) => {
+ipcMain.on('search-query', async (event, queryData) => {
   try {
+    // Check if queryData is an object or string (for backward compatibility)
+    const query = typeof queryData === 'object' ? queryData.query : queryData;
+    const webSearch = typeof queryData === 'object' ? queryData.webSearch : false;
+    
     console.log('Processing search query:', query);
+    console.log('Web search enabled:', webSearch);
     
     // Create main window if it doesn't exist
     if (!mainWindow || mainWindow.isDestroyed()) {
       console.log('Creating main window for query');
       mainWindow = createMainWindow();
+    } else {
+      // Make sure the window is visible and focused
+      setWindowToCurrentSpace(mainWindow);
     }
     
     // Show loading state
@@ -280,17 +298,18 @@ ipcMain.on('search-query', async (event, query) => {
     
     // Send query to AI API
     console.log('Sending query to API');
-    const response = await apiService.sendAiQuery(query);
-    
-    // Hide loading state
-    hideLoadingState();
+    const response = await apiService.sendAiQuery(query, webSearch);
     
     // Navigate to conversation ID when available
     if (response && response.conversationId) {
-      navigateToConversation(response.conversationId);
+      // Don't hide loading state until navigation is complete
+      await navigateToConversation(response.conversationId);
+      // Now hide loading state after navigation
+      hideLoadingState();
     } else {
       console.warn('No conversation ID in response');
       // Fall back to showing main window
+      hideLoadingState();
       setWindowToCurrentSpace(mainWindow);
     }
   } catch (error) {
@@ -368,8 +387,6 @@ function registerShortcuts() {
       // If window exists, make sure it's visible and focused
       setWindowToCurrentSpace(mainWindow);
       
-      // Reload the URL
-      mainWindow.loadURL(config.UI_URL);
       console.log('Main window shown and focused with CMD+Shift+K');
     } else {
       // If window doesn't exist, create it

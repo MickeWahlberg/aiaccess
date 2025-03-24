@@ -8,11 +8,14 @@ class SearchWindow {
         console.log('Search window initializing...');
         this.overlay = document.querySelector('.search-overlay');
         this.input = document.querySelector('.search-input');
+        this.webSearchToggle = document.querySelector('#web-search-toggle');
+        this.isWebSearchEnabled = false;
         this.isVisible = false;
         
         // Debug info
         console.log('Overlay element:', this.overlay);
         console.log('Input element:', this.input);
+        console.log('Web search toggle:', this.webSearchToggle);
         
         // Set up event listeners
         this.setupEventListeners();
@@ -41,6 +44,19 @@ class SearchWindow {
                 this.handleSearch();
             }
         });
+
+        // Web search toggle click handler
+        if (this.webSearchToggle) {
+            this.webSearchToggle.addEventListener('click', () => {
+                this.isWebSearchEnabled = !this.isWebSearchEnabled;
+                if (this.isWebSearchEnabled) {
+                    this.webSearchToggle.classList.add('active');
+                } else {
+                    this.webSearchToggle.classList.remove('active');
+                }
+                console.log('Web search enabled:', this.isWebSearchEnabled);
+            });
+        }
     }
 
     show() {
@@ -71,8 +87,12 @@ class SearchWindow {
         const query = this.input.value.trim();
         if (query) {
             console.log('Sending search query:', query);
-            // Send the search query to the main process
-            ipcRenderer.send('search-query', query);
+            console.log('Web search enabled:', this.isWebSearchEnabled);
+            // Send the search query to the main process with web search flag
+            ipcRenderer.send('search-query', {
+                query: query,
+                webSearch: this.isWebSearchEnabled
+            });
             this.hide();
         }
     }
